@@ -1,0 +1,8 @@
+{"timestamp": "2025-12-22T14:51:51.433288", "query": "What are the ACID properties?", "expanded_query": null, "num_results": 5, "top_score": 0.7, "response_length": 1736}
+{"timestamp": "2025-12-22T15:05:56.115262", "query": "Explain B+ tree indexing and its advantages", "expanded_query": null, "num_results": 4, "top_score": 0.7, "response_length": 2357}
+{"timestamp": "2025-12-22T15:14:32.770421", "query": "what is ACID?", "expanded_query": null, "num_results": 7, "top_score": 0.7, "response_length": 1528}
+{"timestamp": "2025-12-22T15:24:52.727233", "query": "explain B+Tree", "expanded_query": "Can you provide a detailed explanation of the B+Tree data structure and its applications in database indexing?", "num_results": 4, "top_score": 0.7, "response_length": 2553}
+{"timestamp": "2025-12-22T15:31:41.530924", "query": "What are the ACID properties?", "expanded_query": null, "num_results": 5, "top_score": 0.7, "response_length": 1406}
+{"timestamp": "2025-12-22T15:33:01.067836", "query": "SQL vs NoSQL difference", "expanded_query": null, "num_results": 5, "top_score": 0.7, "response_length": 2017}
+{"timestamp": "2025-12-22T15:37:03.734325", "query": "What is machine learning?", "expanded_query": null, "num_results": 5, "top_score": 0.7, "response_length": 460}
+{"timestamp": "2025-12-22T15:37:42.449496", "query": "Explain transactions", "expanded_query": "Can you explain the concept of transactions in database management, including their properties and significance?", "num_results": 7, "top_score": 0.7, "response_length": 2819}

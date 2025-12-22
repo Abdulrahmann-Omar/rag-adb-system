@@ -1,0 +1,27 @@
+# Dependencies
+venv/
+__pycache__/
+*.pyc
+*.pyo
+.env
+
+# Data files (keep in .gitignore, too large)
+# Lectures folder contains copyrighted PDFs
+../Lectures/
+
+# Logs (optional - can include for demo)
+# logs/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Build artifacts
+*.egg-info/
+dist/
+build/
