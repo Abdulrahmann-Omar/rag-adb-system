@@ -25,3 +25,6 @@ tqdm>=4.65.0
 # Dynamic Update System
 spacy>=3.5.0
 networkx>=3.0
+
+# SpaCy model (for entity extraction)
+https://github.com/explosion/spacy-models/releases/download/en_core_web_sm-3.7.1/en_core_web_sm-3.7.1-py3-none-any.whl
