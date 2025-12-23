@@ -624,9 +624,13 @@ st.markdown("""
 def get_rag_system():
     """Initialize and cache RAG system."""
     rag = SelfLearningRAG()
+    # Try to load existing index, but don't fail if none exists
     if not rag.is_ready:
-        with st.spinner("Building index from PDFs..."):
+        try:
             rag.initialize()
+        except Exception as e:
+            # No documents to index yet - that's okay, user can upload
+            print(f"Note: Could not initialize index: {e}")
     return rag
 
 
@@ -745,20 +749,24 @@ def main():
         # Query button
         if st.button("🔍 Ask", type="primary", use_container_width=True):
             if query.strip():
-                with st.spinner("Searching and generating response..."):
-                    try:
-                        result, metadata = rag.query(
-                            question=query,
-                            enable_expansion=enable_expansion,
-                            top_k=top_k
-                        )
-                        
-                        # Store in session state
-                        st.session_state['last_result'] = result
-                        st.session_state['last_metadata'] = metadata
-                        
-                    except Exception as e:
-                        st.error(f"Error: {e}")
+                # Check if RAG system has documents
+                if not rag.is_ready:
+                    st.warning("⚠️ No documents indexed yet! Please upload PDF files using the sidebar first.")
+                else:
+                    with st.spinner("Searching and generating response..."):
+                        try:
+                            result, metadata = rag.query(
+                                question=query,
+                                enable_expansion=enable_expansion,
+                                top_k=top_k
+                            )
+                            
+                            # Store in session state
+                            st.session_state['last_result'] = result
+                            st.session_state['last_metadata'] = metadata
+                            
+                        except Exception as e:
+                            st.error(f"Error: {e}")
         
         # Display response
         if 'last_result' in st.session_state:
