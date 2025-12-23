@@ -205,6 +205,118 @@ class FAISSVectorStore:
         except Exception as e:
             print(f"⚠️  Could not load vector store: {e}")
             return False
+    
+    def add_documents(
+        self, 
+        new_documents: List[Document],
+        save_after: bool = True
+    ) -> int:
+        """
+        Add new documents to existing FAISS index incrementally.
+        
+        Args:
+            new_documents: List of new Document objects to add
+            save_after: Whether to save the updated index to disk
+            
+        Returns:
+            Number of documents added
+        """
+        if not new_documents:
+            return 0
+        
+        if self.index is None:
+            # First time - build from scratch
+            self.build_index(new_documents)
+            if save_after:
+                self.save()
+            return len(new_documents)
+        
+        # Generate embeddings for new documents
+        texts = [doc.content for doc in new_documents]
+        new_embeddings = self.embedding_manager.embed_texts(texts, show_progress=True)
+        
+        # Normalize for cosine similarity
+        faiss.normalize_L2(new_embeddings)
+        
+        # Add to FAISS index
+        self.index.add(new_embeddings)
+        
+        # Update internal state
+        self.documents.extend(new_documents)
+        self.embeddings = np.vstack([self.embeddings, new_embeddings])
+        
+        print(f"✅ Added {len(new_documents)} documents to FAISS index (total: {len(self.documents)})")
+        
+        if save_after:
+            self.save()
+        
+        return len(new_documents)
+    
+    def remove_documents(
+        self, 
+        doc_indices: List[int],
+        save_after: bool = True
+    ) -> int:
+        """
+        Remove documents from FAISS index by their indices.
+        Note: FAISS doesn't support efficient deletion, so we rebuild the index
+        excluding the specified documents.
+        
+        Args:
+            doc_indices: List of document indices to remove
+            save_after: Whether to save the updated index to disk
+            
+        Returns:
+            Number of documents removed
+        """
+        if not doc_indices or self.index is None:
+            return 0
+        
+        # Create mask for documents to keep
+        keep_mask = np.ones(len(self.documents), dtype=bool)
+        for idx in doc_indices:
+            if 0 <= idx < len(self.documents):
+                keep_mask[idx] = False
+        
+        # Filter documents and embeddings
+        self.documents = [doc for i, doc in enumerate(self.documents) if keep_mask[i]]
+        self.embeddings = self.embeddings[keep_mask]
+        
+        # Rebuild FAISS index with remaining embeddings
+        dimension = self.embeddings.shape[1]
+        self.index = faiss.IndexFlatIP(dimension)
+        self.index.add(self.embeddings)
+        
+        removed_count = len(doc_indices)
+        print(f"✅ Removed {removed_count} documents from FAISS index (remaining: {len(self.documents)})")
+        
+        if save_after:
+            self.save()
+        
+        return removed_count
+    
+    def get_document_sources(self) -> List[Dict[str, Any]]:
+        """Get list of unique document sources with metadata."""
+        sources = {}
+        for i, doc in enumerate(self.documents):
+            source = doc.metadata.get('source', 'Unknown')
+            if source not in sources:
+                sources[source] = {
+                    'filename': source,
+                    'chunk_count': 0,
+                    'chunk_indices': [],
+                    'pages': set()
+                }
+            sources[source]['chunk_count'] += 1
+            sources[source]['chunk_indices'].append(i)
+            if 'page' in doc.metadata:
+                sources[source]['pages'].add(doc.metadata['page'])
+        
+        # Convert sets to sorted lists
+        for source in sources.values():
+            source['pages'] = sorted(list(source['pages']))
+        
+        return list(sources.values())
 
 
 class BM25Index:

@@ -1,0 +1,415 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ADB Course RAG System</title>
+    <meta name="description" content="Intelligent Question-Answering for Advanced Databases course materials">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-primary: #0F172A;
+            --bg-secondary: #1E293B;
+            --accent: #3B82F6;
+            --accent-secondary: #8B5CF6;
+            --text-primary: #F8FAFC;
+            --text-secondary: #94A3B8;
+            --success: #10B981;
+            --glass-bg: rgba(255, 255, 255, 0.05);
+            --glass-border: rgba(255, 255, 255, 0.1);
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+        
+        /* Animated gradient background */
+        .bg-gradient {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #0F172A 0%, #1E293B 50%, #0F172A 100%);
+            z-index: -2;
+        }
+        
+        .bg-orbs {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            overflow: hidden;
+        }
+        
+        .orb {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(80px);
+            opacity: 0.3;
+            animation: float 20s infinite ease-in-out;
+        }
+        
+        .orb-1 {
+            width: 600px;
+            height: 600px;
+            background: var(--accent);
+            top: -200px;
+            right: -200px;
+        }
+        
+        .orb-2 {
+            width: 400px;
+            height: 400px;
+            background: var(--accent-secondary);
+            bottom: -100px;
+            left: -100px;
+            animation-delay: -10s;
+        }
+        
+        @keyframes float {
+            0%, 100% { transform: translate(0, 0) scale(1); }
+            50% { transform: translate(50px, 30px) scale(1.1); }
+        }
+        
+        /* Header */
+        header {
+            padding: 20px 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: fixed;
+            top: 0;
+            width: 100%;
+            z-index: 100;
+            backdrop-filter: blur(10px);
+            background: rgba(15, 23, 42, 0.8);
+            border-bottom: 1px solid var(--glass-border);
+        }
+        
+        .logo {
+            font-size: 24px;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .nav-links {
+            display: flex;
+            gap: 30px;
+            list-style: none;
+        }
+        
+        .nav-links a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+        
+        .nav-links a:hover {
+            color: var(--accent);
+        }
+        
+        /* Hero Section */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 120px 20px 60px;
+        }
+        
+        .badge {
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            padding: 8px 16px;
+            border-radius: 50px;
+            font-size: 14px;
+            color: var(--accent);
+            margin-bottom: 24px;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        h1 {
+            font-size: clamp(2.5rem, 6vw, 4.5rem);
+            font-weight: 700;
+            line-height: 1.1;
+            margin-bottom: 24px;
+            background: linear-gradient(135deg, var(--text-primary) 0%, var(--accent) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .subtitle {
+            font-size: 1.25rem;
+            color: var(--text-secondary);
+            max-width: 600px;
+            margin-bottom: 40px;
+        }
+        
+        .cta-buttons {
+            display: flex;
+            gap: 16px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+        
+        .btn {
+            padding: 14px 32px;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, var(--accent), var(--accent-secondary));
+            color: white;
+            border: none;
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 40px rgba(59, 130, 246, 0.4);
+        }
+        
+        .btn-secondary {
+            background: var(--glass-bg);
+            color: var(--text-primary);
+            border: 1px solid var(--glass-border);
+        }
+        
+        .btn-secondary:hover {
+            background: var(--glass-border);
+        }
+        
+        /* Features Section */
+        .features {
+            padding: 100px 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .section-title {
+            text-align: center;
+            font-size: 2.5rem;
+            margin-bottom: 60px;
+        }
+        
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 24px;
+        }
+        
+        .feature-card {
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: 20px;
+            padding: 32px;
+            transition: all 0.3s ease;
+        }
+        
+        .feature-card:hover {
+            transform: translateY(-5px);
+            border-color: var(--accent);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+        }
+        
+        .feature-icon {
+            font-size: 48px;
+            margin-bottom: 16px;
+        }
+        
+        .feature-card h3 {
+            font-size: 1.5rem;
+            margin-bottom: 12px;
+        }
+        
+        .feature-card p {
+            color: var(--text-secondary);
+        }
+        
+        /* Tech Stack */
+        .tech-stack {
+            padding: 80px 20px;
+            background: var(--bg-secondary);
+        }
+        
+        .tech-grid {
+            max-width: 1000px;
+            margin: 0 auto;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 16px;
+        }
+        
+        .tech-badge {
+            background: var(--bg-primary);
+            border: 1px solid var(--glass-border);
+            padding: 12px 24px;
+            border-radius: 50px;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        /* Footer */
+        footer {
+            padding: 40px 20px;
+            text-align: center;
+            color: var(--text-secondary);
+            border-top: 1px solid var(--glass-border);
+        }
+        
+        footer a {
+            color: var(--accent);
+            text-decoration: none;
+        }
+        
+        /* Responsive */
+        @media (max-width: 768px) {
+            header {
+                padding: 16px 20px;
+            }
+            
+            .nav-links {
+                display: none;
+            }
+            
+            .hero {
+                padding: 100px 20px 40px;
+            }
+            
+            .cta-buttons {
+                flex-direction: column;
+                width: 100%;
+                padding: 0 20px;
+            }
+            
+            .btn {
+                width: 100%;
+                justify-content: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="bg-gradient"></div>
+    <div class="bg-orbs">
+        <div class="orb orb-1"></div>
+        <div class="orb orb-2"></div>
+    </div>
+    
+    <header>
+        <div class="logo">📚 ADB RAG</div>
+        <nav>
+            <ul class="nav-links">
+                <li><a href="#features">Features</a></li>
+                <li><a href="#tech">Tech Stack</a></li>
+                <li><a href="https://github.com/Abdulrahmann-Omar/rag-adb-system">GitHub</a></li>
+            </ul>
+        </nav>
+    </header>
+    
+    <main>
+        <section class="hero">
+            <span class="badge">🚀 Powered by Hybrid RAG</span>
+            <h1>ADB Course RAG System</h1>
+            <p class="subtitle">
+                Intelligent Question-Answering for Advanced Databases course materials.
+                Combines semantic understanding with keyword precision for accurate answers.
+            </p>
+            <div class="cta-buttons">
+                <a href="https://huggingface.co/spaces/YOUR_USERNAME/adb-rag" class="btn btn-primary">
+                    🎯 Try Live Demo
+                </a>
+                <a href="https://github.com/Abdulrahmann-Omar/rag-adb-system" class="btn btn-secondary">
+                    ⭐ View on GitHub
+                </a>
+            </div>
+        </section>
+        
+        <section class="features" id="features">
+            <h2 class="section-title">✨ Key Features</h2>
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">🔍</div>
+                    <h3>Hybrid Retrieval</h3>
+                    <p>Combines FAISS semantic search with BM25 keyword matching for superior accuracy.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">📤</div>
+                    <h3>Dynamic Upload</h3>
+                    <p>Add new PDFs with intelligent REPLACE/MERGE/INSERT conflict resolution.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🧠</div>
+                    <h3>Self-Learning</h3>
+                    <p>LLM-powered query expansion and adaptive retrieval from user feedback.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">⚡</div>
+                    <h3>Beautiful Progress</h3>
+                    <p>Glassmorphism UI with real-time progress tracking and ETA calculation.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">📊</div>
+                    <h3>Source Citations</h3>
+                    <p>Every answer includes source documents with relevance scores.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">💬</div>
+                    <h3>Feedback System</h3>
+                    <p>Rate responses to help the system learn and improve over time.</p>
+                </div>
+            </div>
+        </section>
+        
+        <section class="tech-stack" id="tech">
+            <h2 class="section-title">🛠️ Tech Stack</h2>
+            <div class="tech-grid">
+                <div class="tech-badge">🤗 Sentence Transformers</div>
+                <div class="tech-badge">⚡ FAISS</div>
+                <div class="tech-badge">📊 BM25</div>
+                <div class="tech-badge">🤖 GPT-4o-mini</div>
+                <div class="tech-badge">🎨 Streamlit</div>
+                <div class="tech-badge">🐍 Python</div>
+                <div class="tech-badge">📄 pdfplumber</div>
+                <div class="tech-badge">🔗 LangChain</div>
+            </div>
+        </section>
+    </main>
+    
+    <footer>
+        <p>
+            Built with ❤️ for ADB Course @ Zewail City | 
+            <a href="https://github.com/Abdulrahmann-Omar/rag-adb-system">View Source</a>
+        </p>
+    </footer>
+</body>
+</html>

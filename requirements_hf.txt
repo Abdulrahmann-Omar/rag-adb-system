@@ -1,0 +1,26 @@
+# HuggingFace Spaces Requirements
+# Optimized for HF free tier
+
+# Core
+streamlit>=1.28.0
+
+# Document Processing
+pdfplumber>=0.10.0
+langchain-text-splitters>=0.0.1
+
+# Embeddings & Vector Store  
+sentence-transformers>=2.2.0
+faiss-cpu>=1.7.4
+rank-bm25>=0.2.2
+
+# LLM - GitHub Models
+openai>=1.0.0
+python-dotenv>=1.0.0
+
+# Core utilities
+numpy>=1.24.0
+tqdm>=4.65.0
+
+# Optional - Dynamic Update (disable if memory issues)
+# spacy>=3.5.0
+# networkx>=3.0
