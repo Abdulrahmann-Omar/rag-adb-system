@@ -47,7 +47,7 @@ class Config:
     KEYWORD_WEIGHT: float = 0.3
     
     # Paths
-    LECTURES_PATH: Path = Path(os.getenv("LECTURES_PATH", str(BASE_DIR.parent / "Lectures")))
+    LECTURES_PATH: Path = Path(os.getenv("LECTURES_PATH", str(BASE_DIR / "Lectures")))
     VECTOR_STORE_PATH: Path = DATA_DIR / "vector_store"
     PROCESSED_PATH: Path = DATA_DIR / "processed"
     
