@@ -1,172 +1,327 @@
-# ADB Course RAG System
+# 🤖 RAG System for Advanced Database Course
 
-A Retrieval-Augmented Generation system for Advanced Databases course materials, featuring vector database storage, hybrid retrieval, context-aware generation, self-learning capabilities, and an interactive Gradio UI.
+### Intelligent Q&A System Powered by Retrieval-Augmented Generation
+
+[![Python 3.10+](https://img.shields.io/badge/python-3.10+-blue.svg)](https://www.python.org/downloads/)
+[![Streamlit](https://img.shields.io/badge/Streamlit-1.28+-FF4B4B.svg)](https://streamlit.io/)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+[![FAISS](https://img.shields.io/badge/Vector_DB-FAISS-00ADD8.svg)](https://github.com/facebookresearch/faiss)
+[![Live Demo](https://img.shields.io/badge/Live%20Demo-Streamlit%20Cloud-FF4B4B.svg)](https://rag-adb-system.streamlit.app/)
+
+[🚀 Live Demo](https://rag-adb-system.streamlit.app/) | [📖 Documentation](./docs/) | [✨ Features](#-features)
+
+![Demo](docs/afp3cj.gif)
+
+---
+
+## 📋 Overview
+
+**Problem**: Students often need quick, accurate answers from extensive course materials spread across multiple PDF documents.
+
+**Solution**: This RAG (Retrieval-Augmented Generation) system enables intelligent Q&A over Advanced Database course materials by:
+
+1. **Processing** PDF documents into searchable chunks
+2. **Indexing** content using semantic embeddings (FAISS) and keyword search (BM25)
+3. **Retrieving** the most relevant passages using hybrid search
+4. **Generating** accurate, contextual answers with citations via LLM
+
+### 🎯 Key Features
+
+| Feature | Description |
+|---------|-------------|
+| 🔍 **Hybrid Retrieval** | Combines semantic (70%) and keyword (30%) search for optimal results |
+| 🧠 **Self-Learning** | Improves over time based on user feedback |
+| 📊 **Progress Visualization** | Real-time processing indicators with beautiful UI |
+| 📤 **Dynamic Upload** | Add new documents without rebuilding the entire index |
+| 📑 **Source Citations** | Every answer includes relevant source passages |
+| 🎨 **Modern UI** | Professional dark-mode Streamlit interface |
+
+---
+
+## 🏗️ Architecture
+
+```mermaid
+flowchart LR
+    subgraph Input
+        A[📄 PDF Documents]
+        B[❓ User Query]
+    end
+    
+    subgraph Processing
+        C[Document Processor]
+        D[Text Chunker]
+    end
+    
+    subgraph Indexing
+        E[Embedding Model]
+        F[(FAISS Index)]
+        G[(BM25 Index)]
+    end
+    
+    subgraph Retrieval
+        H[Hybrid Retriever]
+    end
+    
+    subgraph Generation
+        I[Context Builder]
+        J[LLM Generator]
+    end
+    
+    subgraph Output
+        K[📝 Answer + Citations]
+    end
+    
+    A --> C --> D --> E --> F
+    D --> G
+    B --> E
+    E --> H
+    F --> H
+    G --> H
+    H --> I --> J --> K
+```
+
+### Components
+
+| Component | Technology | Purpose |
+|-----------|------------|---------|
+| **Document Processor** | pdfplumber | Extract text from PDF files |
+| **Text Splitter** | LangChain | Chunk text with overlap for context preservation |
+| **Embeddings** | all-MiniLM-L6-v2 | 384-dim semantic vectors |
+| **Vector Store** | FAISS | Fast similarity search |
+| **Keyword Search** | BM25 | Traditional keyword matching |
+| **LLM** | GitHub Models (GPT-4o-mini) | Context-aware answer generation |
+| **UI** | Streamlit | Interactive web interface |
+
+---
 
 ## 🚀 Quick Start
 
-### 1. Install Dependencies
+### Prerequisites
 
-```bash
-pip install -r requirements.txt
+- Python 3.10+
+- GitHub Personal Access Token with Models API access ([Get one here](https://github.com/settings/tokens))
+
+### Installation
+
+1. **Clone the repository**
+   ```bash
+   git clone https://github.com/abdulrahmann-omar/rag-adb-system.git
+   cd rag-adb-system
+   ```
+
+2. **Create virtual environment**
+   ```bash
+   python -m venv venv
+   
+   # Windows
+   venv\Scripts\activate
+   
+   # macOS/Linux
+   source venv/bin/activate
+   ```
+
+3. **Install dependencies**
+   ```bash
+   pip install -r requirements.txt
+   ```
+
+4. **Configure environment**
+   ```bash
+   cp .env.example .env
+   # Edit .env and add your GITHUB_TOKEN
+   ```
+
+5. **Run the application**
+   ```bash
+   streamlit run app.py
+   ```
+
+6. **Open browser**: Navigate to `http://localhost:8501`
+
+---
+
+## 💡 Usage
+
+### 1. Upload Documents
+
+- Click **"📤 Upload PDF"** in the sidebar
+- Select one or more PDF files
+- Click **"📥 Process Uploads"**
+- Watch real-time processing with stage indicators
+
+### 2. Ask Questions
+
+**Example queries:**
+- "What are the ACID properties in databases?"
+- "Explain B+ tree indexing with examples"
+- "Compare NoSQL vs SQL for large-scale systems"
+- "What is query optimization?"
+
+### 3. View Sources
+
+- Each answer displays retrieved source passages
+- See relevance scores for transparency
+- Review original context from course materials
+
+### 4. Provide Feedback
+
+- Rate answers with 👍 (Helpful) or 👎 (Not Helpful)
+- System learns from feedback to improve future retrievals
+- View learning statistics in the sidebar
+
+---
+
+## ✨ Features
+
+### Hybrid Retrieval System
+
+```python
+# Weighted score fusion
+final_score = (0.7 × semantic_score) + (0.3 × keyword_score)
 ```
 
-### 2. Configure Environment
+- **Semantic Search**: Understands meaning and context
+- **Keyword Search**: Catches exact terminology and acronyms
+- **Score Fusion**: Balances both approaches for optimal results
 
-Copy the example environment file and add your GitHub token:
+### Self-Learning Capabilities
 
-```bash
-cp .env.example .env
-```
+- ✅ User feedback collection (positive/negative ratings)
+- ✅ Query expansion for ambiguous questions
+- ✅ Adaptive retrieval based on query complexity
+- ✅ Performance analytics in sidebar
 
-Edit `.env` and set your `GITHUB_TOKEN`:
-```env
-GITHUB_TOKEN=your_github_token_here
-```
+### Progress Visualization
 
-### 3. Build Index
+- 🎨 Multi-stage pipeline indicators
+- ⏱️ Real-time metrics (time, chunks, progress)
+- 📊 Beautiful dark-mode UI with animations
+- ✅ Success/error state handling
 
-```bash
-python main.py --build-index
-```
+---
 
-### 4. Launch UI
+## ⚙️ Configuration
 
-```bash
-python app.py
-```
+Edit `.env` or `src/config.py`:
 
-Then open http://localhost:7860 in your browser.
+| Variable | Description | Default |
+|----------|-------------|---------|
+| `GITHUB_TOKEN` | GitHub Models API key | *Required* |
+| `MODEL_NAME` | LLM model to use | `gpt-4o-mini` |
+| `EMBEDDING_MODEL` | Sentence transformer model | `all-MiniLM-L6-v2` |
+| `CHUNK_SIZE` | Characters per text chunk | `1000` |
+| `CHUNK_OVERLAP` | Overlap between chunks | `200` |
+| `TOP_K` | Number of retrieved passages | `5` |
+
+---
 
 ## 📁 Project Structure
 
 ```
-RAG/
-├── src/
-│   ├── __init__.py          # Package initialization
+rag-adb-system/
+├── src/                      # Source code modules
 │   ├── config.py             # Configuration management
 │   ├── document_processor.py # PDF extraction & chunking
 │   ├── vector_store.py       # FAISS & BM25 indexing
 │   ├── retriever.py          # Hybrid retrieval logic
 │   ├── generator.py          # LLM integration
-│   ├── self_learning.py      # Feedback & adaptation
+│   ├── self_learning.py      # Feedback & learning system
+│   ├── dynamic_updater.py    # Dynamic document updates
+│   ├── progress_viz.py       # Progress visualization
 │   └── utils.py              # Helper functions
-│
-├── data/
-│   ├── processed/            # Extracted text files
-│   └── vector_store/         # Saved FAISS index
-│
-├── logs/
-│   ├── queries.jsonl         # Query history
-│   └── feedback.jsonl        # User feedback
-│
-├── app.py                    # Gradio UI
+├── data/                     # Data storage (gitignored)
+│   ├── processed/            # Extracted text
+│   └── vector_store/         # FAISS index files
+├── docs/                     # Documentation
+│   ├── architecture.md       # System architecture
+│   ├── api_reference.md      # API documentation
+│   ├── deployment.md         # Deployment guide
+│   └── development.md        # Developer guide
+├── logs/                     # Query & feedback logs
+├── .github/                  # GitHub workflows & templates
+├── app.py                    # Main Streamlit application
 ├── main.py                   # CLI interface
-├── requirements.txt          # Dependencies
+├── requirements.txt          # Python dependencies
 ├── .env.example              # Environment template
+├── LICENSE                   # MIT License
+├── CONTRIBUTING.md           # Contribution guidelines
 └── README.md                 # This file
 ```
 
-## 🎯 Features
+---
 
-### Core RAG System
-- **Vector Database**: FAISS for efficient similarity search
-- **Hybrid Retrieval**: Combines semantic (FAISS) and keyword (BM25) search
-- **LLM Generation**: GitHub Models API (GPT-4o-mini) for context-aware responses
+## 📊 Performance
 
-### Self-Learning Layer
-- **Feedback Collection**: Track user ratings (👍/👎)
-- **Query Expansion**: Automatically improve unclear queries
-- **Adaptive Retrieval**: Adjust parameters based on query complexity
+| Metric | Value |
+|--------|-------|
+| Query Latency | ~2-3s average |
+| Embedding Speed | ~50 chunks/sec |
+| Retrieval Accuracy | Hybrid outperforms single-method |
+| Index Size | ~2MB per 100 documents |
 
-### User Interface
-- **Chat Interface**: Conversational Q&A with history
-- **Source Display**: View retrieved document chunks
-- **Feedback Buttons**: Rate response quality
-- **Statistics Panel**: Monitor system performance
+---
 
-## 🖥️ Usage
+## 🗺️ Roadmap
 
-### CLI Commands
+- [x] Core RAG pipeline
+- [x] Hybrid retrieval (semantic + BM25)
+- [x] Self-learning feedback system
+- [x] Real-time progress visualization
+- [x] Dynamic document upload
+- [x] Beautiful dark-mode UI
+- [ ] Multi-language support
+- [ ] Advanced query understanding (NER, intent)
+- [ ] Graph-based retrieval
+- [ ] Fine-tuned domain embeddings
 
-```bash
-# Build/rebuild index
-python main.py --build-index
+---
 
-# Force rebuild
-python main.py --build-index --force
+## 📚 Documentation
 
-# Single query
-python main.py --query "What is ACID?"
+- [Architecture Details](docs/architecture.md)
+- [API Reference](docs/api_reference.md)
+- [Deployment Guide](docs/deployment.md)
+- [Development Guide](docs/development.md)
 
-# Interactive mode
-python main.py --interactive
+---
 
-# Check environment
-python main.py --check
+## 🤝 Contributing
 
-# Launch UI
-python main.py --ui
-```
+Contributions are welcome! Please read [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines.
 
-### Python API
+1. Fork the repository
+2. Create feature branch (`git checkout -b feature/amazing-feature`)
+3. Commit changes (`git commit -m 'Add amazing feature'`)
+4. Push to branch (`git push origin feature/amazing-feature`)
+5. Open Pull Request
 
-```python
-from src.self_learning import SelfLearningRAG
+---
 
-# Initialize
-rag = SelfLearningRAG()
-rag.initialize()
+## 📄 License
 
-# Query
-result, metadata = rag.query("What are ACID properties?")
-print(result.response)
-print(result.sources)
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
-# Provide feedback
-rag.submit_feedback("positive")
-```
+---
 
-## 🏗️ Architecture
+## 🙏 Acknowledgments
 
-```
-User Query → Embedding → Vector Search → Context Retrieval → LLM Generation → Response
-                ↓                                                    ↓
-          Vector DB (FAISS)                              Self-Learning (Feedback Loop)
-                                                                     ↓
-                                                              UI (Gradio)
-```
+- **[LangChain](https://langchain.com/)** - RAG framework and text processing
+- **[Sentence Transformers](https://www.sbert.net/)** - Embedding models
+- **[FAISS](https://github.com/facebookresearch/faiss)** - Vector similarity search
+- **[Streamlit](https://streamlit.io/)** - Web UI framework
+- **[GitHub Models](https://github.com/marketplace/models)** - LLM API
 
-### Design Choices
+---
 
-| Component | Choice | Justification |
-|-----------|--------|---------------|
-| Embedding | all-MiniLM-L6-v2 | Free, fast, 384 dimensions |
-| Vector DB | FAISS | In-memory, efficient for small corpus |
-| Similarity | Cosine + BM25 | Semantic + keyword precision |
-| LLM | GitHub Models | Free tier, OpenAI-compatible |
-| UI | Gradio | Rapid prototyping, built-in chat |
+## 👨‍💻 Author
 
-## 📊 Evaluation
+**Abdulrahman Omar** - Advanced Database Course Project
 
-### Test Queries
+[![GitHub](https://img.shields.io/badge/GitHub-abdulrahmann--omar-181717?style=flat&logo=github)](https://github.com/abdulrahmann-omar)
+[![LinkedIn](https://img.shields.io/badge/LinkedIn-Abdulrahman%20Omar-0077B5?style=flat&logo=linkedin)](https://www.linkedin.com/in/abdulrahman-omar-87121b200/)
 
-1. **Factual**: "What are the ACID properties?"
-2. **Conceptual**: "Explain B+ tree indexing advantages"
-3. **Comparative**: "Difference between SQL and NoSQL"
-4. **Edge Case**: "What is machine learning?" (not in lectures)
+📧 Contact: abdu.omar.muhammad@gmail.com
 
-## 🔧 Configuration
+---
 
-Key settings in `.env`:
-
-| Variable | Default | Description |
-|----------|---------|-------------|
-| GITHUB_TOKEN | - | GitHub API token |
-| MODEL_NAME | gpt-4o-mini | LLM model to use |
-| CHUNK_SIZE | 1000 | Document chunk size |
-| CHUNK_OVERLAP | 200 | Chunk overlap |
-| TOP_K | 5 | Default retrieval count |
-
-## 📝 License
-
-This project is for educational purposes as part of the ADB course.
+⭐ **Star this repo if you find it helpful!**

@@ -1,27 +1,58 @@
-# RAG System for ADB Course
+# ===========================================
+# RAG System for Advanced Database Course
+# Python Dependencies
+# ===========================================
+
+# -----------------
 # Document Processing
-pdfplumber>=0.10.0
-langchain>=0.1.0
-langchain-community>=0.0.20
-langchain-text-splitters>=0.0.1
+# -----------------
+pdfplumber>=0.10.0,<0.12.0
+langchain>=0.1.0,<0.3.0
+langchain-community>=0.0.20,<0.3.0
+langchain-text-splitters>=0.0.1,<0.3.0
 
+# -----------------
 # Embeddings & Vector Store
-sentence-transformers>=2.2.0
-faiss-cpu>=1.7.4
-rank-bm25>=0.2.2
+# -----------------
+sentence-transformers>=2.2.0,<3.0.0
+faiss-cpu>=1.7.4,<1.9.0
+rank-bm25>=0.2.2,<0.3.0
 
-# LLM - GitHub Models (OpenAI-compatible)
-openai>=1.0.0
-python-dotenv>=1.0.0
+# -----------------
+# LLM Integration
+# -----------------
+# OpenAI-compatible client for GitHub Models API
+openai>=1.0.0,<2.0.0
 
-# UI
-streamlit>=1.28.0
+# -----------------
+# Configuration
+# -----------------
+python-dotenv>=1.0.0,<2.0.0
 
+# -----------------
+# Web Interface
+# -----------------
+streamlit>=1.28.0,<2.0.0
+
+# -----------------
+# Data Processing
+# -----------------
+numpy>=1.24.0,<2.0.0
+pandas>=2.0.0,<3.0.0
+
+# -----------------
 # Utilities
-numpy>=1.24.0
-pandas>=2.0.0
-tqdm>=4.65.0
+# -----------------
+tqdm>=4.65.0,<5.0.0
+requests>=2.31.0,<3.0.0
 
-# Dynamic Update System (optional, can be slow to install)
-# spacy>=3.5.0
-networkx>=3.0
+# -----------------
+# Graph Processing (Dynamic Updates)
+# -----------------
+networkx>=3.0,<4.0
+
+# -----------------
+# Optional: NLP Enhancement
+# -----------------
+# Uncomment for advanced NLP features
+# spacy>=3.5.0,<4.0.0

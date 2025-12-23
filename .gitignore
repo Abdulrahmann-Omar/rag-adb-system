@@ -1,27 +1,136 @@
-# Dependencies
-venv/
+# ===========================================
+# Git Ignore Configuration
+# RAG System for Advanced Database Course
+# ===========================================
+
+# -----------------
+# Python
+# -----------------
 __pycache__/
-*.pyc
-*.pyo
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# Virtual Environments
+venv/
+env/
+ENV/
+.venv/
+
+# Type Checking
+.mypy_cache/
+.dmypy.json
+dmypy.json
+
+# Testing
+.pytest_cache/
+.coverage
+htmlcov/
+.tox/
+.nox/
+
+# -----------------
+# Environment & Secrets
+# -----------------
 .env
+.env.local
+.env.*.local
+*.key
+secrets.json
+credentials.json
 
-# Data files (keep in .gitignore, too large)
-# Lectures folder contains copyrighted PDFs
-#../Lectures/
+# -----------------
+# Data Files
+# -----------------
+# Vector store indexes (large, regenerable)
+data/vector_store/*
+!data/vector_store/.gitkeep
 
-# Logs (optional - can include for demo)
-# logs/
+# Processed text cache (regenerable)
+data/processed/*
+!data/processed/.gitkeep
 
-# IDE
+# PDF documents (copyrighted)
+data/pdfs/*
+!data/pdfs/.gitkeep
+
+# Lectures folder (copyrighted materials)
+Lectures/
+
+# Feedback database (user data)
+data/feedback/*
+!data/feedback/.gitkeep
+
+# -----------------
+# Logs
+# -----------------
+logs/*.jsonl
+logs/*.log
+*.log
+
+# -----------------
+# IDE & Editors
+# -----------------
 .vscode/
 .idea/
 *.swp
+*.swo
+*~
+.spyderproject
+.spyproject
 
-# OS
+# Jupyter
+.ipynb_checkpoints/
+*.ipynb
+
+# -----------------
+# OS Files
+# -----------------
 .DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
 Thumbs.db
+desktop.ini
 
-# Build artifacts
-*.egg-info/
-dist/
-build/
+# -----------------
+# Temporary Files
+# -----------------
+temp_*
+tmp_*
+scratch_*
+test_output/
+*.tmp
+*.temp
+*.bak
+*.backup
+
+# -----------------
+# Build Artifacts
+# -----------------
+*.manifest
+*.spec
+
+# -----------------
+# Model Cache (large)
+# -----------------
+models/
+.cache/
