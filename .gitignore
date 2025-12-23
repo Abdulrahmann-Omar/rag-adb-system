@@ -7,7 +7,7 @@ __pycache__/
 
 # Data files (keep in .gitignore, too large)
 # Lectures folder contains copyrighted PDFs
-../Lectures/
+#../Lectures/
 
 # Logs (optional - can include for demo)
 # logs/
