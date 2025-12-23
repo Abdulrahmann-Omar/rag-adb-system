@@ -195,6 +195,7 @@ def process_uploaded_files(uploaded_files, rag):
         
         st.balloons()
         st.cache_resource.clear()
+        st.rerun()  # Reload the app with new index
         
     except Exception as e:
         status_placeholder.error(f"❌ Processing failed: {e}")
@@ -624,13 +625,13 @@ st.markdown("""
 def get_rag_system():
     """Initialize and cache RAG system."""
     rag = SelfLearningRAG()
-    # Try to load existing index, but don't fail if none exists
-    if not rag.is_ready:
-        try:
-            rag.initialize()
-        except Exception as e:
-            # No documents to index yet - that's okay, user can upload
-            print(f"Note: Could not initialize index: {e}")
+    # Always try to load existing index from disk
+    try:
+        rag.initialize()
+        print(f"✅ RAG system initialized. Ready: {rag.is_ready}")
+    except Exception as e:
+        # No documents to index yet - that's okay, user can upload
+        print(f"Note: Could not initialize index: {e}")
     return rag
 
 
